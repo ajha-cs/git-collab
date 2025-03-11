@@ -1,5 +1,4 @@
 # lodash==4.17.4
-react==15.4.2
-django==1.11.3
-react-dom==15.4.2
-react-native==0.44.0
+django
+pandas
+requests
