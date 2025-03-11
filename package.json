@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "react": "^19.1.0-canary-9ff42a87-20250130"
+  },
+  "name": "nyapkg",
+  "version": "3.2.2-beta.6"
+}
