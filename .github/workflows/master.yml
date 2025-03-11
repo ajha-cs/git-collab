@@ -4,11 +4,10 @@ on:
   push:
     branches:
       - master  
-permissions:
-  id-token: write
-  contents: read
+# permissions:
+#   id-token: write
+#   contents: read
 jobs:
-  # setup-and-install:
   runs-on: ubuntu-latest
 
   steps:
