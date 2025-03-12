@@ -14,96 +14,82 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'  
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt --index-url=https://dl.cloudsmith.io/Kj9ZYSSp2IpguP7w/orgcs/gharepo/python/simple/
-
-      - name: Create a Python package
+      - name: Build Python package
         run: |
           cd nyapkg
-          pip3 install setuptools
+          pip3 install setuptools wheel
           python setup.py sdist bdist_wheel
           cd ..
+          
+          cp nyapkg/dist/*.tar.gz ./
 
       - name: Upload Package Artifact
         uses: actions/upload-artifact@v4
         with:
           name: python-package
-          path: nyapkg/dist/*.tar.gz    
+          path: |
+            nyapkg/dist/*.tar.gz
+            *.tar.gz  
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Get OIDC token
+      - name: Generate Cloudsmith API Key
         id: get_token
+        env:
+          CLOUDSMITH_SERVICE_SLUG: nyiservice-BjQf
         run: |
-          value=$(curl -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=api://AzureADTokenExchange" | jq '.value')
-          token=$(curl -X POST -H "Content-Type: application/json" -d "{\"oidc_token\":$value, \"service_slug\":\"nyiservice-BjQf\"}" https://api.cloudsmith.io/openid/orgcs/ | jq -r '.token')
-          curl --request GET --url https://api.cloudsmith.io/v1/user/self/ --header "X-Api-Key:Bearer $token" --header 'accept: application/json'
+          oidc_token=$(curl -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=api://AzureADTokenExchange" | jq -r '.value')
+          
+          api_key=$(curl -sS -X POST https://api.cloudsmith.io/openid/orgcs/ \
+            -H "Content-Type: application/json" \
+            -d "{\"oidc_token\":\"$oidc_token\", \"service_slug\":\"$CLOUDSMITH_SERVICE_SLUG\"}" \
+            | jq -r '.token')
 
-          mkdir -p .cache
-          echo "$token" > .cache/cloudsmith_api_key
-          echo "CLOUDSMITH_API_KEY=$token" >> $GITHUB_ENV
+          mkdir -p .cloudsmith_cache
+          echo "$api_key" > .cloudsmith_cache/api-key
+          echo "CLOUDSMITH_API_KEY=$api_key" >> $GITHUB_ENV
 
       - name: Cache API Key
         uses: actions/cache@v3
         with:
-          path: .cache
+          path: .cloudsmith_cache
           key: cloudsmith-key-${{ github.run_id }}
           restore-keys: |
             cloudsmith-key-
 
   push:
     runs-on: ubuntu-latest
-    needs: deploy
-    name: push
+    needs: [build, deploy]
     steps:
       - name: Restore API Key Cache
         uses: actions/cache@v3
         with:
-          path: .cache
+          path: .cloudsmith_cache
           key: cloudsmith-key-${{ github.run_id }}
-          restore-keys: |
-            cloudsmith-key-
 
       - name: Set API Key
         run: |
-          echo "CLOUDSMITH_API_KEY=$(cat .cache/cloudsmith_api_key)" >> $GITHUB_ENV
+          echo "CLOUDSMITH_API_KEY=$(cat .cloudsmith_cache/api-key)" >> $GITHUB_ENV
 
-      - name: Download Package Artifact
+      - name: Download Built Packages
         uses: actions/download-artifact@v4
         with:
           name: python-package
-          path: dist
+          path: packages
 
-      - name: Push Static Package
-        id: push-1
+      - name: Push Packages to Cloudsmith
         uses: cloudsmith-io/action@v0.5.3
         with:
           api-key: ${{ env.CLOUDSMITH_API_KEY }}
-          command: "push"
-          format: "python"
-          owner: "orgcs"
-          repo: "gharepo"
-          republish: "true"
-          file: "./nyapkg-3.0.1.tar.gz"
-
-      - name: Push Built Package
-        id: push-2
-        uses: cloudsmith-io/action@v0.5.3
-        with:
-          api-key: ${{ env.CLOUDSMITH_API_KEY }}
-          command: "push"
-          format: "python"
-          owner: "orgcs"
-          repo: "gharepo"
-          file: "dist/*.tar.gz"
+          command: push
+          format: python
+          owner: orgcs
+          repo: gharepo
+          republish: true
+          file: |
+            packages/*.tar.gz
