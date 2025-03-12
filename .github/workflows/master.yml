@@ -71,12 +71,14 @@ jobs:
         id: push
         uses: ajha-cs/action@master
         with:
-          api-key: ${{ env.CLOUDSMITH_API_KEY }}
+          api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
           command: "push"
-          format: 'python'
+          format: "deb"
           owner: "orgcs"
           repo: "gharepo"
-          republish: "true"
+          distro: "ubuntu"
+          release: "xenial"
+          republish: "true" # needed ONLY if version is not changing
           file: "./nyapkg-3.2.2-beta.6.tgz"
       
                 
