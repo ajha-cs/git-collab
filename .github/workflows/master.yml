@@ -58,25 +58,26 @@ jobs:
         run: |
           cloudsmith whoami
 
-      - name: Push Python Package
-        on: push
-        jobs:
-          push:
-            runs-on: ubuntu-latest
-            name: Python Push Demo
-            steps:
-              - uses: actions/checkout@v4
-              - name: Push
-                id: push
-                uses: cloudsmith-io/action@master
-                with:
-                  api-key: ${{ env.CLOUDSMITH_API_KEY }}
-                  command: "push"
-                  format: "python"
-                  owner: "cloudsmith"
-                  repo: "actions"
-                  republish: "true" # needed ONLY if version is not changing
-                  file: "test/fixture/cloudsmith-python-example-1.0.0.tar.gz"
+  push:
+    runs-on: ubuntu-latest
+    name: Python Push Demo
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Push
+        id: push
+        uses: ./
+        with:
+          api-key: ${{ env.CLOUDSMITH_API_KEY }}
+          command: "push"
+          format: "python"
+          owner: "cloudsmith"
+          repo: "actions"
+          republish: "true" # needed ONLY if version is not changing
+          file: "test/fixture/cloudsmith-python-example-1.0.0.tar.gz"
+      
+                
             
     
 
