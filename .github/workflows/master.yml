@@ -60,6 +60,7 @@ jobs:
 
   push:
     runs-on: ubuntu-latest
+    needs: push
     name: Python Push Demo
     steps:
       - name: Check out code
