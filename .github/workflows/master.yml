@@ -69,15 +69,14 @@ jobs:
 
       - name: Push
         id: push
-        uses: ajha-cs/action@master
+        uses: cloudsmith-io/action@master
         with:
-          api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
+          # api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
+          # api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
           command: "push"
-          format: "deb"
+          format: "python"
           owner: "orgcs"
           repo: "gharepo"
-          distro: "ubuntu"
-          release: "xenial"
           republish: "true" # needed ONLY if version is not changing
           file: "./nyapkg-3.2.2-beta.6.tgz"
       
