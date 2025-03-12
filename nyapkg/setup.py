@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="nyapkg",
-    version="1.0.1",
+    version="2.0.1",
     author="aayush-jha",
     description="abhi bnaya h using GHA",
     packages=find_packages(),
