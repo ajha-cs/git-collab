@@ -57,6 +57,7 @@ jobs:
 
       - name: Checking the user details
         run: |
+          echo $CLOUDSMITH_API_KEY
           cloudsmith whoami
 
   push:
@@ -78,7 +79,10 @@ jobs:
           owner: "orgcs"
           repo: "gharepo"
           republish: "true" # needed ONLY if version is not changing
-          file: "./../nyapkg-3.2.2-beta.6.tgz"
+          file: "./nyapkg-3.2.2-beta.8.tgz"
+        run: |
+          echo $CLOUDSMITH_API_KEY
+
       
                 
             
