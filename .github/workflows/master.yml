@@ -75,7 +75,7 @@ jobs:
           format: "python"
           owner: "orgcs"
           repo: "gharepo"
-          republish: "true" # needed ONLY if version is not changing
+          republish: "true"
           file: "./nyapkg-3.2.2-beta.6.tgz"
       
                 
