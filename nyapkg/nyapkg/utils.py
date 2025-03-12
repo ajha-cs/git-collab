@@ -1,1 +1,2 @@
-print("!! checking whether working or not !!")
+def greet(name):
+    return f"Hello, {name}!"
