@@ -58,7 +58,7 @@ jobs:
 
       - name: Checking the user details
         run: |
-          echo $CLOUDSMITH_API_KEY
+          echo "my api is ${{ needs.deploy.outputs.api_token }}"
           cloudsmith whoami
 
   push:
