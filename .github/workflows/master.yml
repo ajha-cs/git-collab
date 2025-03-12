@@ -72,7 +72,7 @@ jobs:
 
       - name: Push to Cloudsmith
         id: push
-        uses: cloudsmith-io/action@master
+        uses: cloudsmith-io/action@v0.5.3
         with:
           api-key: ${{ env.CLOUDSMITH_API_KEY }}
           command: "push"
