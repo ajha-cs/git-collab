@@ -26,6 +26,21 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt --index-url=https://dl.cloudsmith.io/Kj9ZYSSp2IpguP7w/orgcs/gharepo/python/simple/
 
+      - name: Create a Python package
+        run: |
+          cd nyapkg
+          python setup.py sdist bdist_wheel
+          cd ..
+
+      - name: List package files
+        run: ls -l mypackage/dist/
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-package
+          path: nyapkg/dist/*.tar.gz    
+
   deploy:
     runs-on: ubuntu-latest
     needs: build
@@ -59,7 +74,7 @@ jobs:
           echo "Cloudsmith API Key: ${{ steps.get_token.outputs.cloudsmith_api_key }}"
           cloudsmith whoami
 
-      - name: Push to Cloudsmith
+      - name: Push to Cloudsmith - 1
         id: push
         uses: cloudsmith-io/action@v0.5.3
         with:
@@ -69,7 +84,31 @@ jobs:
           owner: "orgcs"
           repo: "gharepo"
           republish: "true"
-          file: "./nyapkg-3.2.2-beta.8.tgz"    
+          file: "./nyapkg-3.2.2-beta.8.tgz"
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: python-package
+          path: dist
+    
+      - name: Push to Cloudsmith - 2
+        id: push
+        uses: cloudsmith-io/action@v0.5.3
+        with:
+          api-key: ${{ env.CLOUDSMITH_API_KEY }}
+          command: "push"
+          format: "python"
+          owner: "orgcs"
+          repo: "gharepo"
+          file: "dist/*.tar.gz"
+
+
+      
+
+
+
+                  
 
   # push:
   #   runs-on: ubuntu-latest
