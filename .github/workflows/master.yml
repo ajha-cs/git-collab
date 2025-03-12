@@ -34,7 +34,7 @@ jobs:
           cd ..
 
       - name: List package files
-        run: ls -l mypackage/dist/
+        run: ls -l nyapkg/dist/
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
