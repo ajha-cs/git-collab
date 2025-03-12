@@ -67,15 +67,15 @@ jobs:
 
       - name: Push
         id: push
-        uses: ./
+        uses: cloudsmith-io/action@master
         with:
           api-key: ${{ env.CLOUDSMITH_API_KEY }}
           command: "push"
           format: "python"
-          owner: "cloudsmith"
+          owner: "orgcs"
           repo: "actions"
           republish: "true" # needed ONLY if version is not changing
-          file: "test/fixture/cloudsmith-python-example-1.0.0.tar.gz"
+          file: "./nyapkg-3.2.2-beta.6.tgz"
       
                 
             
