@@ -48,7 +48,7 @@ jobs:
           oidc-namespace: 'gha-provider'
           oidc-service-slug: 'nyiservice'
 
-      - name: Checking the user details
+      - name: Checking the user
         run: |
           cloudsmith whoami
     
