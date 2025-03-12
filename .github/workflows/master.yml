@@ -41,14 +41,11 @@ jobs:
         id: get_token
         env:
           CLOUDSMITH_SERVICE_SLUG: nyiservice-BjQf
+          CLOUDSMITH_ORG: orgcs
         run: |
-          oidc_token=$(curl -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=api://AzureADTokenExchange" | jq -r '.value')
-          
-          api_key=$(curl -sS -X POST https://api.cloudsmith.io/openid/orgcs/ \
-            -H "Content-Type: application/json" \
-            -d "{\"oidc_token\":\"$oidc_token\", \"service_slug\":\"$CLOUDSMITH_SERVICE_SLUG\"}" \
-            | jq -r '.token')
+          oidc_token=$(curl -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=api://AzureADTokenExchange" | jq '.value')
+
+          api_key=$(curl -X POST -H "Content-Type: application/json" -d "{\"oidc_token\":$oidc_token, \"service_slug\":\"$CLOUDSMITH_SERVICE_SLUG\"}" https://api.cloudsmith.io/openid/$CLOUDSMITH_ORG/ | jq -r '.token')
 
           curl --request GET --url https://api.cloudsmith.io/v1/user/self/ --header "X-Api-Key:Bearer $token" --header 'accept: application/json'
   
