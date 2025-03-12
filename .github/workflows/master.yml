@@ -70,14 +70,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Use Cloudsmith API Key
-        run: echo "CLOUDSMITH_API_KEY=${{ needs.deploy.outputs.cloudsmith_token }}"  
+        run: echo "CLOUDSMITH_API_KEY=${{ needs.deploy.outputs.cloudsmith_api_key }}"  
 
       - name: Push
         id: push
         uses: cloudsmith-io/action@master
         with:
           # api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
-          api-key: ${{ needs.deploy.outputs.cloudsmith_token }}
+          api-key: ${{ needs.deploy.outputs.cloudsmith_api_key }}
           command: "push"
           format: "python"
           owner: "orgcs"
