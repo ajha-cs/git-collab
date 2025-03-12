@@ -1,8 +1,0 @@
-README.md
-setup.py
-nyapkg/__init__.py
-nyapkg/utils.py
-nyapkg.egg-info/PKG-INFO
-nyapkg.egg-info/SOURCES.txt
-nyapkg.egg-info/dependency_links.txt
-nyapkg.egg-info/top_level.txt
