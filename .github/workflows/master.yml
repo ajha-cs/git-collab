@@ -67,6 +67,8 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
+        run: |
+          echo $CLOUDSMITH_API_KEY
 
       - name: Push
         id: push
@@ -80,8 +82,6 @@ jobs:
           repo: "gharepo"
           republish: "true" # needed ONLY if version is not changing
           file: "./nyapkg-3.2.2-beta.8.tgz"
-        run: |
-          echo $CLOUDSMITH_API_KEY
 
       
                 
