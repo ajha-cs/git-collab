@@ -80,4 +80,4 @@ jobs:
           owner: "orgcs"
           repo: "gharepo"
           republish: "true"
-          file: "/Users/ajha/Desktop/git-collab/nyapkg-3.2.2-beta.8.tgz"
+          file: "git-collab/nyapkg-3.2.2-beta.8.tgz"
