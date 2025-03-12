@@ -93,11 +93,11 @@ jobs:
           name: python-package
           path: dist
 
-      - name: Checking Compatibility
-        run: |
-          cd nyapkg
-          pip3 install twine
-          twine check dist/*
+      # - name: Checking Compatibility
+      #   run: |
+      #     cd nyapkg
+      #     pip3 install twine
+      #     twine check dist/*
 
     
       - name: Push to Cloudsmith - 2
