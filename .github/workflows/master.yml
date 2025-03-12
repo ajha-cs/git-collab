@@ -38,3 +38,16 @@ jobs:
 
           echo "CLOUDSMITH_API_KEY=$token" >> $GITHUB_ENV
 
+      - name: Cloudsmith CLI Setup
+        uses: cloudsmith-io/cloudsmith-cli-action@v1.0.0
+        with: 
+          cli-version: 1.4.1
+          api-key: ${{ env.CLOUDSMITH_API_KEY }}
+          oidc-namespace: 'gha-provider'
+          oidc-service-slug: 'nyiservice'
+
+      - name: Checking the user
+        run: |
+          cloudsmith whoami
+    
+
