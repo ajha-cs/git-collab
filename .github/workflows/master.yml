@@ -92,4 +92,16 @@ jobs:
           repo: gharepo
           republish: true
           file: |
-            packages/*.tar.gz
+            packages/nyapkg-3.0.1.tar.gz
+
+      - name: Push Packages to Cloudsmith
+        uses: cloudsmith-io/action@v0.5.3
+        with:
+          api-key: ${{ env.CLOUDSMITH_API_KEY }}
+          command: push
+          format: python
+          owner: orgcs
+          repo: gharepo
+          republish: true
+          file: |
+            packages/nyapkg-4.0.1.tar.gz      
