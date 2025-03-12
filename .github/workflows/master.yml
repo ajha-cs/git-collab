@@ -64,11 +64,11 @@ jobs:
     needs: deploy
     name: Python Push Demo
     steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-
       - name: Use Cloudsmith API Key
         run: echo "CLOUDSMITH_API_KEY=${{ needs.deploy.outputs.cloudsmith_api_key }}" >> $GITHUB_ENV  
+
+      - name: Check out code
+        uses: actions/checkout@v2
 
       - name: Push to Cloudsmith
         id: push
