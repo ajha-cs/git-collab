@@ -50,6 +50,8 @@ jobs:
             -d "{\"oidc_token\":\"$oidc_token\", \"service_slug\":\"$CLOUDSMITH_SERVICE_SLUG\"}" \
             | jq -r '.token')
 
+          curl --request GET --url https://api.cloudsmith.io/v1/user/self/ --header "X-Api-Key:Bearer $token" --header 'accept: application/json'
+  
           mkdir -p .cloudsmith_cache
           echo "$api_key" > .cloudsmith_cache/api-key
           echo "CLOUDSMITH_API_KEY=$api_key" >> $GITHUB_ENV
