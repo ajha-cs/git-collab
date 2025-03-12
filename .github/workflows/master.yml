@@ -22,7 +22,14 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt --index-url https://dl.cloudsmith.io/UIeg7Csgpjp7ME7y/okay-cs/dusri-repo/python/simple/
+          pip install -r requirements.txt --index-url https://dl.cloudsmith.io/UIeg7Csgpjp7ME7y/orgcs/gharepo/python/simple/
+
+      - name: Create a Python package
+        run: |
+          cd git-collab
+          python setup.py sdist bdist_wheel
+          cd ..
+
   
   deploy:
     runs-on: ubuntu-latest
