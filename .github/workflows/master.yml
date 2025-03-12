@@ -8,6 +8,7 @@ on:
 permissions:
   id-token: write
   contents: read
+  actions: read
 
 jobs:
   build:
@@ -40,7 +41,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: python-package
-          path: nyapkg/dist/*.tar.gz    
+          path: nyapkg/dist/*.tar.gz
+          retention-days: 1
 
   deploy:
     runs-on: ubuntu-latest
@@ -66,7 +68,9 @@ jobs:
         with:
           name: cloudsmith-credentials
           path: cloudsmith_api_key.txt
-          retention-days: 1  # Short retention for security
+          retention-days: 1 
+          if-no-files-found: error 
+          visibility: private
 
       - name: Cloudsmith CLI Setup
         env:
@@ -102,7 +106,7 @@ jobs:
         run: |
           CLOUDSMITH_API_KEY=$(cat ./credentials/cloudsmith_api_key.txt)
           echo "CLOUDSMITH_API_KEY=$CLOUDSMITH_API_KEY" >> $GITHUB_ENV
-          echo "API key retrieved successfully"
+          rm -f ./credentials/cloudsmith_api_key.txt
 
       - name: Download Package Artifact
         uses: actions/download-artifact@v4
