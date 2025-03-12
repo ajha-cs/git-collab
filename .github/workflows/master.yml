@@ -47,7 +47,7 @@ jobs:
           curl --request GET --url https://api.cloudsmith.io/v1/user/self/ --header "X-Api-Key:Bearer $token" --header 'accept: application/json'
 
           echo "CLOUDSMITH_API_KEY=$token" >> $GITHUB_ENV
-          echo "::set-output name=cloudsmith_api_key::$token"
+          echo "CLOUDSMITH_API_KEY=$token" >> $GITHUB_OUTPUT
 
       - name: Cloudsmith CLI Setup
         uses: cloudsmith-io/cloudsmith-cli-action@v1.0.0
@@ -70,14 +70,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Use Cloudsmith API Key
-        run: echo "CLOUDSMITH_API_KEY=${{ needs.deploy.outputs.cloudsmith_api_key }}"  
+        run: echo "CLOUDSMITH_API_KEY=${{ needs.deploy.outputs.CLOUDSMITH_API_KEY }}"  
 
       - name: Push
         id: push
         uses: cloudsmith-io/action@master
         with:
           # api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
-          api-key: ${{ needs.deploy.outputs.cloudsmith_api_key }}
+          api-key: ${{ needs.deploy.outputs.CLOUDSMITH_API_KEY }}
           command: "push"
           format: "python"
           owner: "orgcs"
