@@ -67,8 +67,6 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
-        run: |
-          echo $CLOUDSMITH_API_KEY
 
       - name: Push
         id: push
