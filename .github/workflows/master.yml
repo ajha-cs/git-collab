@@ -75,7 +75,7 @@ jobs:
           cloudsmith whoami
 
       - name: Push to Cloudsmith - 1
-        id: push
+        id: push-1
         uses: cloudsmith-io/action@v0.5.3
         with:
           api-key: ${{ env.CLOUDSMITH_API_KEY }}
@@ -93,7 +93,7 @@ jobs:
           path: dist
     
       - name: Push to Cloudsmith - 2
-        id: push
+        id: push-2
         uses: cloudsmith-io/action@v0.5.3
         with:
           api-key: ${{ env.CLOUDSMITH_API_KEY }}
