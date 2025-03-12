@@ -65,7 +65,7 @@ jobs:
   push:
     runs-on: ubuntu-latest
     needs: deploy
-    name: Python Push Demo
+    name: push
     steps:
       - name: Restore API Key Cache
         uses: actions/cache@v3
