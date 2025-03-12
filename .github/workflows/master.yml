@@ -85,7 +85,7 @@ jobs:
           owner: "orgcs"
           repo: "gharepo"
           republish: "true"
-          file: "./nyapkg/dist/nyapkg-3.0.1.tar.gz"
+          file: "./nyapkg-3.0.1.tar.gz"
 
       - name: Download Artifact
         uses: actions/download-artifact@v4
