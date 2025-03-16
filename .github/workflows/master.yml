@@ -86,7 +86,7 @@ jobs:
           owner: "${{ secrets.CLOUDSMITH_ORG }}"
           repo: "${{ secrets.CLOUDSMITH_REPO }}"
           republish: "true"
-          file: "./nyapkg-3.0.1.tar.gz"
+          file: "./*.tar.gz"
 
       - name: Download Artifact
         uses: actions/download-artifact@v4
