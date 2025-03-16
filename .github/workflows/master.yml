@@ -24,14 +24,14 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt --index-url=https://dl.cloudsmith.io/${CLOUDSMITH_AUTH_TOKEN}/${CLOUDSMITH_ORG}/${CLOUDSMITH_REPO}/python/simple/
+          pip install -r requirements.txt --index-url=https://dl.cloudsmith.io/${env.CLOUDSMITH_AUTH_TOKEN}/${env.CLOUDSMITH_ORG}/${env.CLOUDSMITH_REPO}/python/simple/
 
       - name: Create a Python package
         run: |
           cd nyapkg
           pip3 install setuptools
           python setup.py sdist bdist_wheel
-          cd ..
+
 
       - name: List package files
         run: ls -l nyapkg/dist/
