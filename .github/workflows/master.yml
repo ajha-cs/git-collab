@@ -40,7 +40,7 @@ jobs:
     outputs:
       CS_API_KEY: ${{ steps.get_token.outputs.CS_API_KEY }}
     env: 
-      CLOUDSMITH_SERVICE_SLUG: nyiservice-BjQf  
+      CLOUDSMITH_SERVICE_SLUG: nyiservice-BjQf	  
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -49,12 +49,21 @@ jobs:
         run: |
           value=$(curl -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=api://AzureADTokenExchange" | jq '.value')
           echo $value
-          token=$(curl -X POST -H "Content-Type: application/json" -d "{\"oidc_token\":$value, \"service_slug\":\"$CLOUDSMITH_SERVICE_SLUG\"}" https://api.cloudsmith.io/openid/${{ secrets.CLOUDSMITH_ORG }}/ | jq -r '.token')
+          token=$(curl -X POST -H "Content-Type: application/json" -d "{\"oidc_token\":$value, \"service_slug\":\"$CLOUDSMITH_SERVICE_SLUG\"}" https://api.cloudsmith.io/openid/orgcs/ | jq -r '.token')
           echo $token
           curl --request GET --url https://api.cloudsmith.io/v1/user/self/ --header "X-Api-Key:Bearer $token" --header 'accept: application/json'
 
           echo "::set-output name=CS_API_KEY::$token"
           echo "CLOUDSMITH_API_KEY=$token" >> $GITHUB_ENV
+
+      - name: Login in Docker
+        run: |
+          docker login -u "orgcs/dockerrepo" --password-stdin "krNl9cs7uwGhra26"
+            
+      - name: Pull Image (via Cloudsmith upstream cache)
+        run: |
+          docker pull docker.cloudsmith.io/orgcs/dockerrepo/redis:latest
+ 
       - name: Cloudsmith CLI Setup
         uses: cloudsmith-io/cloudsmith-cli-action@v1.0.0
         with: 
@@ -64,35 +73,36 @@ jobs:
       - name: Checking the user details
         run: |
           cloudsmith whoami
-  push:
-    runs-on: ubuntu-latest
-    needs: deploy
-    steps:
-      - name: Get a Repository
-        uses: actions/checkout@v4
-      - name: Push Static Package
-        id: push-1
-        uses: cloudsmith-io/action@v0.5.3
-        with:
-          api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
-          command: "push"
-          format: "python"
-          owner: "${{ secrets.CLOUDSMITH_ORG }}"
-          repo: "${{ secrets.CLOUDSMITH_REPO }}"
-          republish: "true"
-          file: "./*.tar.gz"
-      - name: Download Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: python-package
-          path: dist
-      - name: Push to Cloudsmith
-        id: push-2
-        uses: cloudsmith-io/action@v0.5.3
-        with:
-          api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
-          command: "push"
-          format: "python"
-          owner: "${{ secrets.CLOUDSMITH_ORG }}"
-          repo: "${{ secrets.CLOUDSMITH_REPO }}"
-          file: "dist/*.tar.gz"
+  # push:
+  #   runs-on: ubuntu-latest
+  #   needs: deploy
+  #   steps:
+  #     - name: Get a Repository
+  #       uses: actions/checkout@v4
+  #     - name: Push Static Package
+  #       id: push-1
+  #       uses: cloudsmith-io/action@v0.5.3
+  #       with:
+  #         api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
+  #         command: "push"
+  #         format: "python"
+  #         owner: "${{ secrets.CLOUDSMITH_ORG }}"
+  #         repo: "${{ secrets.CLOUDSMITH_REPO }}"
+  #         republish: "true"
+  #         file: "./*.tar.gz"
+  #     - name: Download Artifact
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: python-package
+  #         path: dist
+  #     - name: Push to Cloudsmith
+  #       id: push-2
+  #       uses: cloudsmith-io/action@v0.5.3
+  #       with:
+  #         api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
+  #         command: "push"
+  #         format: "python"
+  #         owner: "${{ secrets.CLOUDSMITH_ORG }}"
+  #         repo: "${{ secrets.CLOUDSMITH_REPO }}"
+  #         file: "dist/*.tar.gz"
+      
