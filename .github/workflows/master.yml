@@ -53,12 +53,12 @@ jobs:
           echo $token
           curl --request GET --url https://api.cloudsmith.io/v1/user/self/ --header "X-Api-Key:Bearer $token" --header 'accept: application/json'
 
-          echo "::set-output name=CS_API_KEY::$token"
+          # echo "::set-output name=CS_API_KEY::$token"
           echo "CLOUDSMITH_API_KEY=$token" >> $GITHUB_ENV
 
       - name: Login in Docker
         run: |
-          docker login docker.cloudsmith.io -u "orgcs/dockerrepo" -p "${{ env.CLOUDSMITH_API_KEY}}"
+          docker login docker.cloudsmith.io -u "aayush-jha" -p "${{ env.CLOUDSMITH_API_KEY}}"
             
       - name: Pull Image (via Cloudsmith upstream cache)
         run: |
