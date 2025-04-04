@@ -58,7 +58,7 @@ jobs:
 
       - name: Login in Docker
         run: |
-          docker login docker.cloudsmith.io -u "aayush-jha" -p "${{ secrets.CLOUDSMITH_API_KEY }}"
+          docker login docker.cloudsmith.io -u "aayush-jha" -p "${{ env.CLOUDSMITH_API_KEY }}"
             
       - name: Pull Image (via Cloudsmith upstream cache)
         run: |
